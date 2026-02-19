@@ -125,7 +125,7 @@ func orderProcessor(ctx context.Context, repo *postgres.Repository, client *tran
 			// По-хорошему обработка заказов должна выполняться в отдельных го-рутинах
 			// (воркер пул), из-за простоты задания решил сделать в этом же треде.
 			for _, order := range orders {
-				err = client.ProcessOrder(ctx, order.ID.String(), order.Items)
+				err = client.ProcessOrder(ctx, order.ID.String())
 				if err != nil {
 					log.Printf("failed to process order: %v", err)
 				}

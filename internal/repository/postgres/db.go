@@ -124,9 +124,14 @@ func (r *Repository) UpdateOrderStatus(ctx context.Context, id uuid.UUID, status
 		SET status = $1, updated_at = NOW()
 		WHERE id = $2
 	`
-	_, err := r.pool.Exec(ctx, query, status, id)
+	result, err := r.pool.Exec(ctx, query, status, id)
 	if err != nil {
 		return fmt.Errorf("failed to update order status: %w", err)
 	}
+
+	if result.RowsAffected() == 0 {
+		return fmt.Errorf("order with id %s not found for status update", id)
+	}
+	
 	return nil
 }

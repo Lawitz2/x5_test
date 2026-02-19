@@ -3,11 +3,9 @@ package grpc
 import (
 	"context"
 	"fmt"
-	"x5_test/internal/api/proto/gen"
-	"x5_test/internal/domain"
-
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"x5_test/internal/api/proto/gen"
 )
 
 type FulfillmentClient struct {
@@ -31,18 +29,9 @@ func (c *FulfillmentClient) Close() error {
 	return c.conn.Close()
 }
 
-func (c *FulfillmentClient) ProcessOrder(ctx context.Context, orderID string, items []domain.Item) error {
-	protoItems := make([]*gen.OrderItem, len(items))
-	for i, item := range items {
-		protoItems[i] = &gen.OrderItem{
-			Sku: item.SKU,
-			Qty: int32(item.Quantity),
-		}
-	}
-
+func (c *FulfillmentClient) ProcessOrder(ctx context.Context, orderID string) error {
 	req := &gen.ProcessOrderRequest{
 		OrderId: orderID,
-		Items:   protoItems,
 	}
 
 	_, err := c.client.ProcessOrder(ctx, req)

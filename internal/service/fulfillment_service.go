@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"math/rand"
 	"time"
@@ -30,7 +31,7 @@ func (s *FulfillmentService) ProcessOrder(ctx context.Context, orderID string) e
 	}
 
 	if err := s.repo.UpdateOrderStatus(ctx, id, domain.StatusProcessing); err != nil {
-		return err
+		return fmt.Errorf("failed to update order status to processing: %v", err)
 	}
 
 	// Имитируем работу (200ms)
@@ -43,8 +44,7 @@ func (s *FulfillmentService) ProcessOrder(ctx context.Context, orderID string) e
 	}
 
 	if err := s.repo.UpdateOrderStatus(ctx, id, finalStatus); err != nil {
-		log.Printf("failed to update final status for order %s: %v", orderID, err)
-		return err
+		return fmt.Errorf("failed to update final status for order %s: %v", orderID, err)
 	}
 
 	log.Printf("Order %s processed with status %s", orderID, finalStatus)

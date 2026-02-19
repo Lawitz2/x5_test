@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v6.33.5
-// source: api/proto/fulfillment.proto
+// source: internal/api/proto/fulfillment.proto
 
 package gen
 
@@ -31,7 +31,7 @@ type OrderItem struct {
 
 func (x *OrderItem) Reset() {
 	*x = OrderItem{}
-	mi := &file_api_proto_fulfillment_proto_msgTypes[0]
+	mi := &file_internal_api_proto_fulfillment_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -43,7 +43,7 @@ func (x *OrderItem) String() string {
 func (*OrderItem) ProtoMessage() {}
 
 func (x *OrderItem) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_fulfillment_proto_msgTypes[0]
+	mi := &file_internal_api_proto_fulfillment_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -56,7 +56,7 @@ func (x *OrderItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrderItem.ProtoReflect.Descriptor instead.
 func (*OrderItem) Descriptor() ([]byte, []int) {
-	return file_api_proto_fulfillment_proto_rawDescGZIP(), []int{0}
+	return file_internal_api_proto_fulfillment_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *OrderItem) GetSku() string {
@@ -75,15 +75,14 @@ func (x *OrderItem) GetQty() int32 {
 
 type ProcessOrderRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OrderId       string       `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
-	Items         []*OrderItem `protobuf:"bytes,2,rep,name=items,proto3" json:"items,omitempty"`
+	OrderId       string                 `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ProcessOrderRequest) Reset() {
 	*x = ProcessOrderRequest{}
-	mi := &file_api_proto_fulfillment_proto_msgTypes[1]
+	mi := &file_internal_api_proto_fulfillment_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -95,7 +94,7 @@ func (x *ProcessOrderRequest) String() string {
 func (*ProcessOrderRequest) ProtoMessage() {}
 
 func (x *ProcessOrderRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_fulfillment_proto_msgTypes[1]
+	mi := &file_internal_api_proto_fulfillment_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -108,7 +107,7 @@ func (x *ProcessOrderRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProcessOrderRequest.ProtoReflect.Descriptor instead.
 func (*ProcessOrderRequest) Descriptor() ([]byte, []int) {
-	return file_api_proto_fulfillment_proto_rawDescGZIP(), []int{1}
+	return file_internal_api_proto_fulfillment_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *ProcessOrderRequest) GetOrderId() string {
@@ -116,13 +115,6 @@ func (x *ProcessOrderRequest) GetOrderId() string {
 		return x.OrderId
 	}
 	return ""
-}
-
-func (x *ProcessOrderRequest) GetItems() []*OrderItem {
-	if x != nil {
-		return x.Items
-	}
-	return nil
 }
 
 type ProcessOrderResponse struct {
@@ -135,7 +127,7 @@ type ProcessOrderResponse struct {
 
 func (x *ProcessOrderResponse) Reset() {
 	*x = ProcessOrderResponse{}
-	mi := &file_api_proto_fulfillment_proto_msgTypes[2]
+	mi := &file_internal_api_proto_fulfillment_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -147,7 +139,7 @@ func (x *ProcessOrderResponse) String() string {
 func (*ProcessOrderResponse) ProtoMessage() {}
 
 func (x *ProcessOrderResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_fulfillment_proto_msgTypes[2]
+	mi := &file_internal_api_proto_fulfillment_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -160,7 +152,7 @@ func (x *ProcessOrderResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProcessOrderResponse.ProtoReflect.Descriptor instead.
 func (*ProcessOrderResponse) Descriptor() ([]byte, []int) {
-	return file_api_proto_fulfillment_proto_rawDescGZIP(), []int{2}
+	return file_internal_api_proto_fulfillment_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ProcessOrderResponse) GetStatus() string {
@@ -177,17 +169,16 @@ func (x *ProcessOrderResponse) GetMessage() string {
 	return ""
 }
 
-var File_api_proto_fulfillment_proto protoreflect.FileDescriptor
+var File_internal_api_proto_fulfillment_proto protoreflect.FileDescriptor
 
-const file_api_proto_fulfillment_proto_rawDesc = "" +
+const file_internal_api_proto_fulfillment_proto_rawDesc = "" +
 	"\n" +
-	"\x1bapi/proto/fulfillment.proto\x12\vfulfillment\"/\n" +
+	"$internal/api/proto/fulfillment.proto\x12\vfulfillment\"/\n" +
 	"\tOrderItem\x12\x10\n" +
 	"\x03sku\x18\x01 \x01(\tR\x03sku\x12\x10\n" +
-	"\x03qty\x18\x02 \x01(\x05R\x03qty\"^\n" +
+	"\x03qty\x18\x02 \x01(\x05R\x03qty\"0\n" +
 	"\x13ProcessOrderRequest\x12\x19\n" +
-	"\border_id\x18\x01 \x01(\tR\aorderId\x12,\n" +
-	"\x05items\x18\x02 \x03(\v2\x16.fulfillment.OrderItemR\x05items\"H\n" +
+	"\border_id\x18\x01 \x01(\tR\aorderId\"H\n" +
 	"\x14ProcessOrderResponse\x12\x16\n" +
 	"\x06status\x18\x01 \x01(\tR\x06status\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage2i\n" +
@@ -195,54 +186,53 @@ const file_api_proto_fulfillment_proto_rawDesc = "" +
 	"\fProcessOrder\x12 .fulfillment.ProcessOrderRequest\x1a!.fulfillment.ProcessOrderResponseB\x13Z\x11x5_test/api/protob\x06proto3"
 
 var (
-	file_api_proto_fulfillment_proto_rawDescOnce sync.Once
-	file_api_proto_fulfillment_proto_rawDescData []byte
+	file_internal_api_proto_fulfillment_proto_rawDescOnce sync.Once
+	file_internal_api_proto_fulfillment_proto_rawDescData []byte
 )
 
-func file_api_proto_fulfillment_proto_rawDescGZIP() []byte {
-	file_api_proto_fulfillment_proto_rawDescOnce.Do(func() {
-		file_api_proto_fulfillment_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_api_proto_fulfillment_proto_rawDesc), len(file_api_proto_fulfillment_proto_rawDesc)))
+func file_internal_api_proto_fulfillment_proto_rawDescGZIP() []byte {
+	file_internal_api_proto_fulfillment_proto_rawDescOnce.Do(func() {
+		file_internal_api_proto_fulfillment_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_internal_api_proto_fulfillment_proto_rawDesc), len(file_internal_api_proto_fulfillment_proto_rawDesc)))
 	})
-	return file_api_proto_fulfillment_proto_rawDescData
+	return file_internal_api_proto_fulfillment_proto_rawDescData
 }
 
-var file_api_proto_fulfillment_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
-var file_api_proto_fulfillment_proto_goTypes = []any{
+var file_internal_api_proto_fulfillment_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_internal_api_proto_fulfillment_proto_goTypes = []any{
 	(*OrderItem)(nil),            // 0: fulfillment.OrderItem
 	(*ProcessOrderRequest)(nil),  // 1: fulfillment.ProcessOrderRequest
 	(*ProcessOrderResponse)(nil), // 2: fulfillment.ProcessOrderResponse
 }
-var file_api_proto_fulfillment_proto_depIdxs = []int32{
-	0, // 0: fulfillment.ProcessOrderRequest.items:type_name -> fulfillment.OrderItem
-	1, // 1: fulfillment.FulfillmentService.ProcessOrder:input_type -> fulfillment.ProcessOrderRequest
-	2, // 2: fulfillment.FulfillmentService.ProcessOrder:output_type -> fulfillment.ProcessOrderResponse
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+var file_internal_api_proto_fulfillment_proto_depIdxs = []int32{
+	1, // 0: fulfillment.FulfillmentService.ProcessOrder:input_type -> fulfillment.ProcessOrderRequest
+	2, // 1: fulfillment.FulfillmentService.ProcessOrder:output_type -> fulfillment.ProcessOrderResponse
+	1, // [1:2] is the sub-list for method output_type
+	0, // [0:1] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for extension type_name
+	0, // [0:0] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_api_proto_fulfillment_proto_init() }
-func file_api_proto_fulfillment_proto_init() {
-	if File_api_proto_fulfillment_proto != nil {
+func init() { file_internal_api_proto_fulfillment_proto_init() }
+func file_internal_api_proto_fulfillment_proto_init() {
+	if File_internal_api_proto_fulfillment_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_proto_fulfillment_proto_rawDesc), len(file_api_proto_fulfillment_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_internal_api_proto_fulfillment_proto_rawDesc), len(file_internal_api_proto_fulfillment_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_api_proto_fulfillment_proto_goTypes,
-		DependencyIndexes: file_api_proto_fulfillment_proto_depIdxs,
-		MessageInfos:      file_api_proto_fulfillment_proto_msgTypes,
+		GoTypes:           file_internal_api_proto_fulfillment_proto_goTypes,
+		DependencyIndexes: file_internal_api_proto_fulfillment_proto_depIdxs,
+		MessageInfos:      file_internal_api_proto_fulfillment_proto_msgTypes,
 	}.Build()
-	File_api_proto_fulfillment_proto = out.File
-	file_api_proto_fulfillment_proto_goTypes = nil
-	file_api_proto_fulfillment_proto_depIdxs = nil
+	File_internal_api_proto_fulfillment_proto = out.File
+	file_internal_api_proto_fulfillment_proto_goTypes = nil
+	file_internal_api_proto_fulfillment_proto_depIdxs = nil
 }

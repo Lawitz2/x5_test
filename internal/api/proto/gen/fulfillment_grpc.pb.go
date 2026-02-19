@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.6.1
 // - protoc             v6.33.5
-// source: api/proto/fulfillment.proto
+// source: internal/api/proto/fulfillment.proto
 
 package gen
 
@@ -117,5 +117,5 @@ var FulfillmentService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "api/proto/fulfillment.proto",
+	Metadata: "internal/api/proto/fulfillment.proto",
 }
