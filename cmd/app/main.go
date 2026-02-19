@@ -109,11 +109,16 @@ func main() {
 	log.Println("Server exited properly")
 }
 
+type fulfillmentClient interface {
+	ProcessOrder(ctx context.Context, orderID string) error
+	Close() error
+}
+
 // Поллит базу каждые 5 сек на наличие новых заказов, обрабатывает их если таковые есть.
 func orderProcessor(
 	ctx context.Context,
-	repo *postgres.Repository,
-	client *transportgrpc.FulfillmentClient,
+	repo service.OrderRepository,
+	client fulfillmentClient,
 	limit int) {
 	ticker := time.NewTicker(time.Second * 5)
 	defer ticker.Stop()

@@ -1,23 +1,28 @@
 package api
 
 import (
-	"log"
-	"net/http"
-	"x5_test/internal/domain"
-	"x5_test/internal/service"
-
+	"context"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"log"
+	"net/http"
+	"x5_test/internal/domain"
 )
 
 type Handler struct {
-	orderService *service.OrderService
+	orderService OrderService
 	limit        int
 }
 
-func NewHandler(os *service.OrderService, limit int) *Handler {
+func NewHandler(os OrderService, limit int) *Handler {
 	return &Handler{orderService: os, limit: limit}
+}
+
+type OrderService interface {
+	CreateOrder(ctx context.Context, customerID string, items []domain.Item) (*domain.Order, error)
+	GetOrder(ctx context.Context, id uuid.UUID) (*domain.Order, error)
+	ListOrders(ctx context.Context, customerID string, status domain.OrderStatus, limit int) ([]domain.Order, error)
 }
 
 func (h *Handler) Register(e *echo.Echo) {

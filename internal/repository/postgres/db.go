@@ -127,7 +127,7 @@ func (r *Repository) ListOrders(
 func (r *Repository) UpdateOrderStatus(ctx context.Context, id uuid.UUID, status domain.OrderStatus) error {
 	query := `
 		UPDATE orders
-		SET status = $1, updated_at = NOW()
+		SET status = $1
 		WHERE id = $2
 	`
 	result, err := r.pool.Exec(ctx, query, status, id)

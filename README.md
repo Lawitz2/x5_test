@@ -52,7 +52,7 @@ curl.exe -X POST http://localhost:8080/orders -H "Content-Type: application/json
 ```json
 {
   "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
-  "customer_id": "customer-alpha-1",
+  "customer_id": "cust-1",
   "items": [
     {"sku": "SKU-A100", "qty": 2},
     {"sku": "SKU-B200", "qty": 5}
