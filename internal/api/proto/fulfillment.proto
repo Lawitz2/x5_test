@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package fulfillment;
 
-option go_package = "x5_test/api/proto";
+option go_package = "x5_test/internal/api/proto/gen";
 
 service FulfillmentService {
   rpc ProcessOrder(ProcessOrderRequest) returns (ProcessOrderResponse);

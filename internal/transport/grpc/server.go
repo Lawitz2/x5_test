@@ -2,14 +2,14 @@ package grpc
 
 import (
 	"context"
-	gen2 "x5_test/internal/api/proto/gen"
+	"x5_test/internal/api/proto/gen"
 	"x5_test/internal/service"
 
 	"google.golang.org/grpc"
 )
 
 type FulfillmentServer struct {
-	gen2.UnimplementedFulfillmentServiceServer
+	gen.UnimplementedFulfillmentServiceServer
 	service *service.FulfillmentService
 }
 
@@ -17,16 +17,16 @@ func NewFulfillmentServer(grpcServer *grpc.Server, svc *service.FulfillmentServi
 	srv := &FulfillmentServer{
 		service: svc,
 	}
-	gen2.RegisterFulfillmentServiceServer(grpcServer, srv)
+	gen.RegisterFulfillmentServiceServer(grpcServer, srv)
 }
 
-func (s *FulfillmentServer) ProcessOrder(ctx context.Context, req *gen2.ProcessOrderRequest) (*gen2.ProcessOrderResponse, error) {
+func (s *FulfillmentServer) ProcessOrder(ctx context.Context, req *gen.ProcessOrderRequest) (*gen.ProcessOrderResponse, error) {
 	err := s.service.ProcessOrder(ctx, req.GetOrderId())
 	if err != nil {
 		return nil, err
 	}
 
-	return &gen2.ProcessOrderResponse{
+	return &gen.ProcessOrderResponse{
 		Status:  "SUCCESS",
 		Message: "Order processed successfully",
 	}, nil

@@ -39,4 +39,5 @@ CREATE TRIGGER update_orders_updated_at
 -- +goose StatementBegin
 DROP TABLE IF EXISTS orders;
 DROP TYPE IF EXISTS order_status;
+DROP FUNCTION IF EXISTS update_updated_at_column();
 -- +goose StatementEnd

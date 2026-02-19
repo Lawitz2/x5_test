@@ -38,7 +38,7 @@
 
 **Запрос:**
 ```bash
-curl.exe -X POST http://localhost:8080/orders -H "Content-Type: application/json" -d '{
+curl -X POST http://localhost:8080/orders -H "Content-Type: application/json" -d '{
   "customer_id": "cust-1",
   "items": [
     {"sku": "SKU-A100", "qty": 2},

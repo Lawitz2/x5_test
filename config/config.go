@@ -28,7 +28,7 @@ type Config struct {
 }
 
 // NewConfig загружает конфигурацию из .env файла или переменных окружения.
-func NewConfig() (*Config, error) {
+func NewConfig() *Config {
 	cfg := &Config{}
 	dbCfg := DBConfig{}
 
@@ -76,5 +76,5 @@ func NewConfig() (*Config, error) {
 
 	cfg.DBConfig = dbCfg
 
-	return cfg, nil
+	return cfg
 }
