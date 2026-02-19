@@ -13,10 +13,11 @@ import (
 
 type Handler struct {
 	orderService *service.OrderService
+	limit        int
 }
 
-func NewHandler(os *service.OrderService) *Handler {
-	return &Handler{orderService: os}
+func NewHandler(os *service.OrderService, limit int) *Handler {
+	return &Handler{orderService: os, limit: limit}
 }
 
 func (h *Handler) Register(e *echo.Echo) {
@@ -47,7 +48,7 @@ func (h *Handler) CreateOrder(c echo.Context) error {
 	if len(req.Items) == 0 {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "items are required"})
 	}
-	
+
 	for _, item := range req.Items {
 		if item.SKU == "" || item.Quantity <= 0 {
 			return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid item"})
@@ -88,7 +89,7 @@ func (h *Handler) ListOrders(c echo.Context) error {
 	customerID := c.QueryParam("customer_id")
 	status := domain.OrderStatus(c.QueryParam("status"))
 
-	orders, err := h.orderService.ListOrders(c.Request().Context(), customerID, status)
+	orders, err := h.orderService.ListOrders(c.Request().Context(), customerID, status, h.limit)
 	if err != nil {
 		log.Printf("failed to list orders: %v", err.Error())
 		return c.JSON(http.StatusInternalServerError, nil)

@@ -6,6 +6,7 @@ import (
 	"net"
 	"net/url"
 	"os"
+	"strconv"
 )
 
 type DBConfig struct {
@@ -22,6 +23,7 @@ type Config struct {
 	HTTPPort      string
 	GRPCPort      string
 	MigrationsDir string
+	PageLimit     int
 	DBConfig      DBConfig
 }
 
@@ -38,6 +40,13 @@ func NewConfig() (*Config, error) {
 	cfg.HTTPPort = os.Getenv("HTTP_PORT")
 	cfg.GRPCPort = os.Getenv("GRPC_PORT")
 	cfg.MigrationsDir = os.Getenv("MIGRATIONS_DIR")
+
+	pageLimit := os.Getenv("PAGE_LIMIT")
+	cfg.PageLimit, err = strconv.Atoi(pageLimit)
+	if err != nil {
+		log.Printf("Error parsing PAGE_LIMIT environment variable: %s", err.Error())
+		cfg.PageLimit = 100
+	}
 
 	dbCfg.Host = os.Getenv("DB_HOST")
 	dbCfg.Port = os.Getenv("DB_PORT")

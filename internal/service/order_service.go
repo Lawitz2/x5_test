@@ -13,7 +13,7 @@ import (
 type OrderRepository interface {
 	CreateOrder(ctx context.Context, order *domain.Order) error
 	GetOrder(ctx context.Context, id uuid.UUID) (*domain.Order, error)
-	ListOrders(ctx context.Context, customerID string, status domain.OrderStatus) ([]domain.Order, error)
+	ListOrders(ctx context.Context, customerID string, status domain.OrderStatus, limit int) ([]domain.Order, error)
 }
 
 type FulfillmentClient interface {
@@ -54,6 +54,11 @@ func (s *OrderService) GetOrder(ctx context.Context, id uuid.UUID) (*domain.Orde
 }
 
 // ListOrders возвращает список заказов с возможностью фильтрации.
-func (s *OrderService) ListOrders(ctx context.Context, customerID string, status domain.OrderStatus) ([]domain.Order, error) {
-	return s.repo.ListOrders(ctx, customerID, status)
+func (s *OrderService) ListOrders(
+	ctx context.Context,
+	customerID string,
+	status domain.OrderStatus,
+	limit int,
+) ([]domain.Order, error) {
+	return s.repo.ListOrders(ctx, customerID, status, limit)
 }

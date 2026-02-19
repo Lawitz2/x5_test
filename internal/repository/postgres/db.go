@@ -75,15 +75,21 @@ func (r *Repository) GetOrder(ctx context.Context, id uuid.UUID) (*domain.Order,
 	return &order, nil
 }
 
-func (r *Repository) ListOrders(ctx context.Context, customerID string, status domain.OrderStatus) ([]domain.Order, error) {
+func (r *Repository) ListOrders(
+	ctx context.Context,
+	customerID string,
+	status domain.OrderStatus,
+	limit int,
+) ([]domain.Order, error) {
 	query := `
 		SELECT id, customer_id, items, status, created_at, updated_at
 		FROM orders
 		WHERE ($1 = '' OR customer_id = $1)
 		  AND ($2 = '' OR status::text = $2)
 		ORDER BY created_at DESC
+		LIMIT $3
 	`
-	rows, err := r.pool.Query(ctx, query, customerID, string(status))
+	rows, err := r.pool.Query(ctx, query, customerID, string(status), limit)
 	if err != nil {
 		return nil, fmt.Errorf("failed to list orders: %w", err)
 	}
@@ -132,6 +138,6 @@ func (r *Repository) UpdateOrderStatus(ctx context.Context, id uuid.UUID, status
 	if result.RowsAffected() == 0 {
 		return fmt.Errorf("order with id %s not found for status update", id)
 	}
-	
+
 	return nil
 }

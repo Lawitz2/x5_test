@@ -37,6 +37,7 @@ services:
       DB_PASSWORD: postgres
       DB_SSL_MODE: disable
       MIGRATIONS_DIR: migrations
+      PAGE_LIMIT: 100
 
 volumes:
   postgres_data:

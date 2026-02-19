@@ -64,7 +64,7 @@ func main() {
 	}()
 
 	e := echo.New()
-	h := api.NewHandler(orderSvc)
+	h := api.NewHandler(orderSvc, cfg.PageLimit)
 	h.Register(e)
 
 	go func() {
@@ -81,7 +81,7 @@ func main() {
 
 	ctx, cancelProcessor := context.WithCancel(context.Background())
 	go func() {
-		orderProcessor(ctx, repo, grpcClient)
+		orderProcessor(ctx, repo, grpcClient, cfg.PageLimit)
 	}()
 
 	// Graceful shutdown
@@ -110,13 +110,17 @@ func main() {
 }
 
 // Поллит базу каждые 5 сек на наличие новых заказов, обрабатывает их если таковые есть.
-func orderProcessor(ctx context.Context, repo *postgres.Repository, client *transportgrpc.FulfillmentClient) {
+func orderProcessor(
+	ctx context.Context,
+	repo *postgres.Repository,
+	client *transportgrpc.FulfillmentClient,
+	limit int) {
 	ticker := time.NewTicker(time.Second * 5)
 	defer ticker.Stop()
 	for {
 		select {
 		case <-ticker.C:
-			orders, err := repo.ListOrders(ctx, "", domain.StatusNew)
+			orders, err := repo.ListOrders(ctx, "", domain.StatusNew, limit)
 			if err != nil {
 				log.Printf("failed to list orders: %v", err)
 				continue
@@ -125,7 +129,9 @@ func orderProcessor(ctx context.Context, repo *postgres.Repository, client *tran
 			// По-хорошему обработка заказов должна выполняться в отдельных го-рутинах
 			// (воркер пул), из-за простоты задания решил сделать в этом же треде.
 			for _, order := range orders {
-				err = client.ProcessOrder(ctx, order.ID.String())
+				ctxTimeout, cancel := context.WithTimeout(ctx, 30*time.Second)
+				err = client.ProcessOrder(ctxTimeout, order.ID.String())
+				cancel()
 				if err != nil {
 					log.Printf("failed to process order: %v", err)
 				}
