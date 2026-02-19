@@ -45,12 +45,7 @@ func main() {
 
 	repo := postgres.NewRepository(pool)
 
-	grpcClient, err := transportgrpc.NewFulfillmentClient("localhost:" + cfg.GRPCPort)
-	if err != nil {
-		log.Fatalf("failed to create grpc client: %v", err)
-	}
-
-	orderSvc := service.NewOrderService(repo, grpcClient)
+	orderSvc := service.NewOrderService(repo)
 	fulfillmentSvc := service.NewFulfillmentService(repo)
 
 	lis, err := net.Listen("tcp", ":"+cfg.GRPCPort)
@@ -68,7 +63,6 @@ func main() {
 		}
 	}()
 
-	// Роутер.
 	e := echo.New()
 	h := api.NewHandler(orderSvc)
 	h.Register(e)
@@ -79,6 +73,11 @@ func main() {
 			log.Fatalf("failed to start HTTP server: %v", err)
 		}
 	}()
+
+	grpcClient, err := transportgrpc.NewFulfillmentClient("localhost:" + cfg.GRPCPort)
+	if err != nil {
+		log.Fatalf("failed to create grpc client: %v", err)
+	}
 
 	ctx, cancelProcessor := context.WithCancel(context.Background())
 	go func() {

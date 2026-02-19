@@ -15,7 +15,6 @@ message OrderItem {
 
 message ProcessOrderRequest {
   string order_id = 1;
-  repeated OrderItem items = 2;
 }
 
 message ProcessOrderResponse {

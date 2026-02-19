@@ -21,19 +21,16 @@ type FulfillmentClient interface {
 }
 
 type OrderService struct {
-	repo   OrderRepository
-	client FulfillmentClient
+	repo OrderRepository
 }
 
-func NewOrderService(repo OrderRepository, client FulfillmentClient) *OrderService {
+func NewOrderService(repo OrderRepository) *OrderService {
 	return &OrderService{
-		repo:   repo,
-		client: client,
+		repo: repo,
 	}
 }
 
-// CreateOrder создает новый заказ (здесь возможен асинхронный запуск обработки заказа,
-// если необходимо делать это при его создании).
+// CreateOrder создает новый заказ.
 func (s *OrderService) CreateOrder(ctx context.Context, customerID string, items []domain.Item) (*domain.Order, error) {
 	order := &domain.Order{
 		ID:         uuid.New(),

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"log"
 	"net/http"
 	"x5_test/internal/domain"
 	"x5_test/internal/service"
@@ -43,9 +44,20 @@ func (h *Handler) CreateOrder(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "customer_id is required"})
 	}
 
+	if len(req.Items) == 0 {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "items are required"})
+	}
+	
+	for _, item := range req.Items {
+		if item.SKU == "" || item.Quantity <= 0 {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid item"})
+		}
+	}
+
 	order, err := h.orderService.CreateOrder(c.Request().Context(), req.CustomerID, req.Items)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		log.Printf("failed to create order: %v", err.Error())
+		return c.JSON(http.StatusInternalServerError, nil)
 	}
 
 	// Ответ - 201 created с созданным заказом
@@ -61,7 +73,8 @@ func (h *Handler) GetOrder(c echo.Context) error {
 
 	order, err := h.orderService.GetOrder(c.Request().Context(), id)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		log.Printf("failed to get order: %v", err.Error())
+		return c.JSON(http.StatusInternalServerError, nil)
 	}
 
 	if order == nil {
@@ -77,7 +90,8 @@ func (h *Handler) ListOrders(c echo.Context) error {
 
 	orders, err := h.orderService.ListOrders(c.Request().Context(), customerID, status)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		log.Printf("failed to list orders: %v", err.Error())
+		return c.JSON(http.StatusInternalServerError, nil)
 	}
 
 	if orders == nil {
