@@ -15,9 +15,8 @@ import (
 	"syscall"
 	"time"
 	"x5_test/config"
-	"x5_test/internal/domain"
-
 	"x5_test/internal/api"
+	"x5_test/internal/domain"
 	"x5_test/internal/repository/postgres"
 	"x5_test/internal/service"
 	transportgrpc "x5_test/internal/transport/grpc"
@@ -114,10 +113,14 @@ type fulfillmentClient interface {
 	Close() error
 }
 
+type orderRepository interface {
+	ClaimOrders(ctx context.Context, limit int) ([]domain.Order, error)
+}
+
 // Поллит базу каждые 5 сек на наличие новых заказов, обрабатывает их если таковые есть.
 func orderProcessor(
 	ctx context.Context,
-	repo service.OrderRepository,
+	repo orderRepository,
 	client fulfillmentClient,
 	limit int) {
 	ticker := time.NewTicker(time.Second * 5)
@@ -125,7 +128,7 @@ func orderProcessor(
 	for {
 		select {
 		case <-ticker.C:
-			orders, err := repo.ListOrders(ctx, "", domain.StatusNew, limit)
+			orders, err := repo.ClaimOrders(ctx, limit)
 			if err != nil {
 				log.Printf("failed to list orders: %v", err)
 				continue

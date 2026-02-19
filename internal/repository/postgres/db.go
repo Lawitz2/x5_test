@@ -141,3 +141,71 @@ func (r *Repository) UpdateOrderStatus(ctx context.Context, id uuid.UUID, status
 
 	return nil
 }
+
+func (r *Repository) ClaimOrders(ctx context.Context, limit int) ([]domain.Order, error) {
+	tx, err := r.pool.Begin(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to begin transaction: %w", err)
+	}
+	defer tx.Rollback(ctx)
+
+	selectQuery := `
+		SELECT id, customer_id, items, status, created_at, updated_at
+		FROM orders
+		WHERE status = $1
+		ORDER BY created_at ASC
+		LIMIT $2
+		FOR UPDATE SKIP LOCKED
+	`
+	rows, err := tx.Query(ctx, selectQuery, domain.StatusNew, limit)
+	if err != nil {
+		return nil, fmt.Errorf("failed to select orders for claim: %w", err)
+	}
+	defer rows.Close()
+
+	var orders []domain.Order
+	var ids []uuid.UUID
+	for rows.Next() {
+		var order domain.Order
+		var itemsJSON []byte
+		err := rows.Scan(
+			&order.ID,
+			&order.CustomerID,
+			&itemsJSON,
+			&order.Status,
+			&order.CreatedAt,
+			&order.UpdatedAt,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan order: %w", err)
+		}
+		if err := json.Unmarshal(itemsJSON, &order.Items); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal items: %w", err)
+		}
+		orders = append(orders, order)
+		ids = append(ids, order.ID)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("rows error: %w", err)
+	}
+
+	if len(ids) == 0 {
+		return orders, nil // no orders to claim
+	}
+
+	updateQuery := `
+		UPDATE orders
+		SET status = $1
+		WHERE id = ANY($2)
+	`
+	_, err = tx.Exec(ctx, updateQuery, domain.StatusProcessing, ids)
+	if err != nil {
+		return nil, fmt.Errorf("failed to update claimed orders status: %w", err)
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return nil, fmt.Errorf("failed to commit transaction: %w", err)
+	}
+
+	return orders, nil
+}

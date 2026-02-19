@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"log"
 	"net/http"
+	"strings"
 	"x5_test/internal/domain"
 )
 
@@ -92,7 +93,25 @@ func (h *Handler) GetOrder(c echo.Context) error {
 
 func (h *Handler) ListOrders(c echo.Context) error {
 	customerID := c.QueryParam("customer_id")
-	status := domain.OrderStatus(c.QueryParam("status"))
+	status := domain.OrderStatus(strings.ToUpper(c.QueryParam("status")))
+
+	if status != "" {
+		valid := false
+		for _, s := range []domain.OrderStatus{
+			domain.StatusNew,
+			domain.StatusProcessing,
+			domain.StatusFulfilled,
+			domain.StatusFailed,
+		} {
+			if status == s {
+				valid = true
+				break
+			}
+		}
+		if !valid {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid status value"})
+		}
+	}
 
 	orders, err := h.orderService.ListOrders(c.Request().Context(), customerID, status, h.limit)
 	if err != nil {
